@@ -164,6 +164,17 @@ enum class Position : char {
 	BOTTOM = 'b',
 };
 
+/**
+ * window properties for containers of windows
+ */
+struct window_t {
+	std::string wm_class; ///< wm_class of the window
+	std::string instance; ///< the process of the window
+	std::string window_role; ///< window role, can be empty
+	std::string title; ///< title of the window
+	uint64_t transient_for; ///Id of its parent window, can be empty
+};
+
 
 /**
  * A node of tree of windows
@@ -171,7 +182,9 @@ enum class Position : char {
 struct container_t {
 	uint64_t  id; ///< The internal ID (actually a C pointer value) of this container. Do not make any assumptions about it. You can use it to (re-)identify and address containers when talking to i3
 	uint64_t  xwindow_id; ///< The X11 window ID of the actual client window inside this container. This field is set to null for split containers or otherwise empty containers. This ID corresponds to what xwininfo(1) and other X11-related tools display (usually in hex)
+	window_t window_properties; ///< Properties of the X11 window. This is set to null for all containers which xwindow_id is set to null as well
 	std::string  name; ///< The internal name of this container. For all containers which are part of the tree structure down to the workspace contents, this is set to a nice human-readable name of the container. For containers that have an X11 window, the content is the title (_NET_WM_NAME property) of that window. For all other containers, the content is not defined (yet)
+	int ws_num; ///< Index of workspace, if this containers type is "workspace", null otherwise
 	std::string  type; ///< Type of this container
 	BorderStyle  border; ///< A style of the container's border
 	std::string  border_raw; ///< A "border" field of TREE reply. NOT empty only if border equals BorderStyle::UNKNOWN

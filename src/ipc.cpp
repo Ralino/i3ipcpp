@@ -49,6 +49,16 @@ inline rect_t  parse_rect_from_json(const Json::Value&  value) {
 	};
 }
 
+inline window_t parse_window_from_json(const Json::Value& value) {
+	return {
+		.wm_class = value["class"].asString(),
+		.instance = value["instance"].asString(),
+		.window_role = value["window_role"].asString(),
+		.title = value["title"].asString(),
+		.transient_for = value["transient_for"].asUInt64()
+	};
+}
+
 
 static std::shared_ptr<container_t>  parse_container_from_json(const Json::Value&  o) {
 #define i3IPC_TYPE_STR "PARSE CONTAINER FROM JSON"
@@ -59,8 +69,10 @@ static std::shared_ptr<container_t>  parse_container_from_json(const Json::Value
 
 	container->id = o["id"].asUInt64();
 	container->xwindow_id= o["window"].asUInt64();
+	container->window_properties = parse_window_from_json(o["window_properties"]);
 	container->name = o["name"].asString();
 	container->type = o["type"].asString();
+	container->ws_num = o["num"].asInt();
 	container->current_border_width = o["current_border_width"].asInt();
 	container->percent = o["percent"].asFloat();
 	container->rect = parse_rect_from_json(o["rect"]);
