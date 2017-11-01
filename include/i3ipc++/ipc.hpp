@@ -200,6 +200,7 @@ struct container_t {
 	bool  focused;
 
 	std::list< std::shared_ptr<container_t> >  nodes;
+	std::list< std::shared_ptr<container_t> > floating_nodes;
 };
 
 

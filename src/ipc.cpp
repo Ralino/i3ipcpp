@@ -124,6 +124,13 @@ static std::shared_ptr<container_t>  parse_container_from_json(const Json::Value
 			container->nodes.push_back(parse_container_from_json(nodes[i]));
 		}
 	}
+	Json::Value floating_nodes = o["floating_nodes"];
+	if (!floating_nodes.isNull()) {
+		IPC_JSON_ASSERT_TYPE_ARRAY(floating_nodes, "floating_nodes")
+		for (Json::ArrayIndex  i = 0; i < floating_nodes.size(); i++) {
+			container->floating_nodes.push_back(parse_container_from_json(floating_nodes[i]));
+		}
+	}
 
 	return container;
 #undef i3IPC_TYPE_STR
