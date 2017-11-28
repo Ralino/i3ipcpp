@@ -172,7 +172,7 @@ struct window_t {
 	std::string instance; ///< the process of the window
 	std::string window_role; ///< window role, can be empty
 	std::string title; ///< title of the window
-	uint64_t transient_for; ///Id of its parent window, can be empty
+	uint64_t transient_for; ///< Id of its parent window, can be empty
 };
 
 
