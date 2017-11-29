@@ -370,6 +370,11 @@ public:
 	 */
 	void  disconnect_event_socket();
 
+	/**
+	 * @return true if still connected to i3
+	 **/
+	bool is_connected();
+
 	sigc::signal<void, const workspace_event_t&>  signal_workspace_event; ///< Workspace event signal
 	sigc::signal<void>  signal_output_event; ///< Output event signal
 	sigc::signal<void, const mode_t&>  signal_mode_event; ///< Output mode event signal

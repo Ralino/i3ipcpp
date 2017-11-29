@@ -84,12 +84,14 @@ conn.signal_binding_event.connect([](const i3ipc::binding_t&  b) {
 
 Then we starting the event-handling loop
 ```c++
-while (true) {
+do {
 	conn.handle_event();
-}
+} while (conn.is_connected());
 ```
 
 **Note:** If you want to interract with event_socket or just want to prepare manually you can call `conn.connect_event_socket()` (if you want to reconnect `conn.connect_event_socket(true)`), but if by default `connect_event_socket()` called on first `handle_event()` call.
+
+The connection will automatically be disconnected when i3 exits or restarts. If you want to handle restart or exit differently you can subscribe to the [shutdown event](https://i3wm.org/docs/ipc.html#_shutdown_event) and connect to its signal handler.
 
 ### Requesting
 

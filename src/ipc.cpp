@@ -450,6 +450,11 @@ void  connection::disconnect_event_socket() {
 		return;
 	}
 	i3_disconnect(m_event_socket);
+	m_event_socket = 0;
+}
+
+bool connection::is_connected() {
+	return m_event_socket > 0;
 }
 
 
@@ -490,9 +495,9 @@ bool  connection::subscribe(const int32_t  events) {
 		if (events & static_cast<int32_t>(ET_BINDING)) {
 			payload_auss << "\"binding\",";
 		}
-		if (events & static_cast<int32_t>(ET_SHUTDOWN)) {
-			payload_auss << "\"shutdown\",";
-		}
+		//Always subscribe to shutdown event
+		payload_auss << "\"shutdown\",";
+
 		payload = payload_auss;
 		if (payload.empty()) {
 			return true;
