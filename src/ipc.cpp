@@ -409,12 +409,12 @@ connection::connection(const std::string&  socket_path) : m_main_socket(i3_conne
 			Json::Value root;
 			IPC_JSON_READ(root);
 			std::string change = root["change"].asString();
+
+			I3IPC_WARN("i3 has shutdown, disconnecting.")
+			this->disconnect_event_socket();
 			if (change == "restart" || "exit") {
 				i3ipc::ShutdownEventType type = (change == "restart")? i3ipc::ShutdownEventType::RESTART : i3ipc::ShutdownEventType::EXIT;
 				signal_shutdown_event.emit(type);
-
-				I3IPC_WARN("i3 has shutdown, disconnecting.")
-				this->disconnect_event_socket();
 			} else {
 				I3IPC_WARN("Got \"" << change << "\" in field \"change\" of shutdown_event. Expected \"restart\" or \"exit\"")
 			}
