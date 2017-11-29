@@ -405,6 +405,20 @@ connection::connection(const std::string&  socket_path) : m_main_socket(i3_conne
 			}
 			break;
 		}
+		case ET_SHUTDOWN: {
+			Json::Value root;
+			IPC_JSON_READ(root);
+			std::string change = root["change"].asString();
+			if (change == "restart" || "exit") {
+				i3ipc::ShutdownEventType type = (change == "restart")? i3ipc::ShutdownEventType::RESTART : i3ipc::ShutdownEventType::EXIT;
+				signal_shutdown_event.emit(type);
+
+				I3IPC_WARN("i3 has shutdown, disconnecting.")
+				this->disconnect_event_socket();
+			} else {
+				I3IPC_WARN("Got \"" << change << "\" in field \"change\" of shutdown_event. Expected \"restart\" or \"exit\"")
+			}
+		}
 		};
 	});
 #undef i3IPC_TYPE_STR
@@ -475,6 +489,9 @@ bool  connection::subscribe(const int32_t  events) {
 		}
 		if (events & static_cast<int32_t>(ET_BINDING)) {
 			payload_auss << "\"binding\",";
+		}
+		if (events & static_cast<int32_t>(ET_SHUTDOWN)) {
+			payload_auss << "\"shutdown\",";
 		}
 		payload = payload_auss;
 		if (payload.empty()) {
